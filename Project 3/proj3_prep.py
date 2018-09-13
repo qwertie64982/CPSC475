@@ -18,7 +18,7 @@ def makeList():
     return addresses
 
 # turns addresses into addressesTokenized, converting everything to lowercase words with no extraneous characters except '
-# also returns a list of year integers as a parallel list to addressesTokenized
+# writes addressesTokenized and a parallel years list to proj3.pkl using pickle
 def tokenize(addresses):
     outFile = open('proj3.pkl', 'w')
     addressesTokenized = []
