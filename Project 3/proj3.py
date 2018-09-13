@@ -11,18 +11,20 @@ from nltk.corpus import inaugural
 import pickle
 import re
 
+# creates addresses, a list of raw inaugural addresses from nltk.corpus.inaugural
 def makeList():
     fileIds = inaugural.fileids()
     addresses = [address for address in fileIds]
     return addresses
 
+# turns addresses into addressesTokenized, converting everything to lowercase words with no extraneous characters except '
+# also returns a list of year integers as a parallel list to addressesTokenized
 def tokenize(addresses):
     outFile = open('proj3.pkl', 'w')
     addressesTokenized = []
     years = []
     for address in addresses:
         addressText = ''
-        print address
         years.append(int(address[:4])) # grab year from filename to make x-axis
         for sent in inaugural.sents(address):
             sent = ' '.join(sent)
@@ -37,6 +39,7 @@ def tokenize(addresses):
     outFile.close()
     return addressesTokenized, years
 
+# counts how many times targetWord is found in addressesTokenized
 def countWord(targetWord, addressesTokenized):
     wordCounts = []
     for address in addressesTokenized:
@@ -47,10 +50,12 @@ def countWord(targetWord, addressesTokenized):
         wordCounts.append(wordCount)
     return wordCounts
 
+# renders and show the graph
 def graphUsage(years, targetWordOccurrances):
     plt.plot(years, targetWordOccurrances)
     plt.show()
 
+# driver function
 def main():
     # get addresses
     addresses = makeList()
