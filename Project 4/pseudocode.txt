@@ -1,0 +1,11 @@
+keep first letter
+remove all non initial a, e, i, o, u, y, h, w
+replace b, f, p, v -> 1
+replace c, g, j, k, q, s, x, z -> 2
+replace d, t -> 3
+replace l -> 4
+replace m, n -> 5
+replace r -> 6
+replace 666 -> 6
+if length > 4, cut off end
+elif length < 4, pad with 0s
