@@ -33,39 +33,30 @@ def soundex(inString):
         
         # make rest of name lowercase for easier processing
         inString = inString.lower()
-        # print inString # debug
-        
-        # remove [vowels + y, w, h]
-        inString = re.sub("[aeiouywh]", "", inString)
-        # print inString # debug
         
         # [b, f, p, v] -> 1
         inString = re.sub("[bfpv]", "1", inString)
-        # print inString # debug
         
         # [c, g, j, k, q, s, x, z] -> 2
         inString = re.sub("[cgjkqsxz]", "2", inString)
-        # print inString # debug
         
         # [d, t] -> 3
         inString = re.sub("[dt]", "3", inString)
-        # print inString # debug
         
         # [l] -> 4
         inString = re.sub("[l]", "4", inString)
-        # print inString # debug
         
         # [m, n] -> 5
         inString = re.sub("[mn]", "5", inString)
-        # print inString # debug
         
         # [r] -> 6
         inString = re.sub("[r]", "6", inString)
-        # print inString # debug
         
         # reduce multiple numbers in a row to one number (ex. 222 -> 2)
         inString = re.sub("([0-9])\\1+", "\\1", inString)
-        # print inString # debug
+        
+        # remove [vowels + y, w, h]
+        inString = re.sub("[aeiouywh]", "", inString)
         
         # lengthen/shorten to number section to 3 characters in length
         inStringLength = len(inString)
