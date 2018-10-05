@@ -9,8 +9,6 @@ Due: 2018-10-05 18:00 PDT
 
 import sys
 
-distanceMatrix = [[0]]
-
 # main driver function
 def main():
     if len(sys.argv) != 3: # if the user enters the wrong number of arguments
@@ -22,9 +20,14 @@ def main():
         distanceMatrix = fillDistanceMatrix(source, target)
         
         fancyPrint(distanceMatrix, source, target)
+        
+        printAlignment(distanceMatrix, source, target)
 
 # fills the distance matrix
 def fillDistanceMatrix(source, target):
+    # initialize the matrix
+    distanceMatrix = [[0]]
+    
     # steps 1 and 2 - fill the x-axis
     distanceMatrix[0] = [i for i in range(len(target) + 1)]
     
@@ -35,15 +38,15 @@ def fillDistanceMatrix(source, target):
     # step 4 - fill the rest of the values
     for x in range(1, len(target) + 1):
         for y in range(1, len(source) + 1):
-            distanceMatrix[y].append(minDistance(x, y, source, target)) # y corresponds to which row in the matrix
+            distanceMatrix[y].append(minDistance(distanceMatrix, x, y, source, target)) # y corresponds to which row in the matrix
     
     return distanceMatrix
 
 # finds the value for a non-edge item in the distance matrix (step 4)
-def minDistance(x, y, source, target):
+def minDistance(distanceMatrix, x, y, source, target):
     # cost of inserting/deleting is always the same
-    insValue = distanceMatrix[y-1][x] + 1
-    delValue = distanceMatrix[y][x-1] + 1
+    delValue = distanceMatrix[y-1][x] + 1
+    insValue = distanceMatrix[y][x-1] + 1
     
     # cost of substitution depends on whether or not the chars match
     if target[x-1] == source[y-1]:
@@ -52,7 +55,7 @@ def minDistance(x, y, source, target):
         subValue = distanceMatrix[y-1][x-1] + 2
     
     # return the smallest of these values
-    return min(insValue, delValue, subValue)
+    return min(delValue, insValue, subValue)
 
 # this does not handle 2 digit numbers in the matrix
 def fancyPrint(distanceMatrix, source, target):
@@ -76,5 +79,53 @@ def fancyPrint(distanceMatrix, source, target):
     print("\n") # 2 newlines
     
     print("Minimum edit distance: " + str(distanceMatrix[0][len(target)]) + "\n")
+
+def printAlignment(distanceMatrix, source, target):
+    pathMatrix = findPath(distanceMatrix, source, target)
+    print(str(pathMatrix))
+
+def findPath(distanceMatrix, source, target):
+    pathMatrix = []
+    
+    currentY = 0
+    currentX = 0
+    currentValue = delValue = insValue = subValue = 0
+    canDel = False
+    canIns = False
+    canSub = False
+    while not (currentY == len(source) and currentX == len(target)):
+        currentValue = distanceMatrix[currentY][currentX]
+        
+        if currentY < len(source) and currentX < len(target):
+            subValue = distanceMatrix[currentY + 1][currentX + 1]
+            if subValue == currentValue or subValue == currentValue + 2:
+                canSub = True
+        elif currentX < len(target):
+            insValue = distanceMatrix[currentY][currentX + 1]
+            if insValue == currentValue + 1:
+                canIns = True
+        elif currentY < len(source):
+            delValue = distanceMatrix[currentY + 1][currentX]
+            if delValue == currentValue + 1:
+                canDel = True
+        
+        if canSub == True and subValue == currentValue:
+            pathMatrix.append("S")
+            currentY += 1
+            currentX += 1
+        elif canDel:
+            pathMatrix.append("d")
+            currentY += 1
+        elif canIns:
+            pathMatrix.append("i")
+            currentX += 1
+        elif canSub:
+            pathMatrix.append("s")
+            currentY += 1
+            currentX += 1
+        
+        canDel = canIns = canSub = False
+    
+    return pathMatrix
 
 main()
