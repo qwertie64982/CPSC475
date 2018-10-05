@@ -20,8 +20,8 @@ def main():
         target = str(sys.argv[2]) # get target from command line argument 2
         
         distanceMatrix = fillDistanceMatrix(source, target)
-        for row in distanceMatrix[::-1]:
-            print(row)
+        
+        fancyPrint(distanceMatrix, source, target)
 
 # fills the distance matrix
 def fillDistanceMatrix(source, target):
@@ -53,5 +53,28 @@ def minDistance(x, y, source, target):
     
     # return the smallest of these values
     return min(insValue, delValue, subValue)
+
+# this does not handle 2 digit numbers in the matrix
+def fancyPrint(distanceMatrix, source, target):
+    distanceMatrix = distanceMatrix[::-1] # invert the matrix, because otherwise 0,0 is at the top left
+    source = source[::-1] # invert source so we can print it upside down
+    
+    print # newline
+    
+    # print all rows with the source on the left (all but bottom)
+    for i in range(len(distanceMatrix) - 1):
+        print(source[i] + " " + str(distanceMatrix[i]))
+    
+    # print the row with the # on the left (bottom)
+    print("# " + str(distanceMatrix[len(distanceMatrix) - 1]))
+    
+    # print the # and target word below the matrix
+    print("   # "),
+    for j in range(len(target)):
+        print(target[j] + " "),
+    
+    print("\n") # 2 newlines
+    
+    print("Minimum edit distance: " + str(distanceMatrix[0][len(target)]) + "\n")
 
 main()
