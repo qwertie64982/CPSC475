@@ -4,7 +4,7 @@ Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
 Project 2: This program calculates the minimum edit distance between two words
 Usage: python proj5.py {source} {target}
-Due: 2018-10-05 18:00 PDT
+Due: 2018-10-05 18:00 PDT, extension to 2018-10-08 18:00 PDT
 '''
 
 import sys
@@ -57,7 +57,9 @@ def minDistance(distanceMatrix, x, y, source, target):
     # return the smallest of these values
     return min(delValue, insValue, subValue)
 
-# this does not handle 2 digit numbers in the matrix
+# prints the distance matrix with labels on the axes
+# as well as the minimum edit distance
+# this does not handle 2 digit numbers in the matrix well
 def fancyPrint(distanceMatrix, source, target):
     distanceMatrix = distanceMatrix[::-1] # invert the matrix, because otherwise 0,0 is at the top left
     source = source[::-1] # invert source so we can print it upside down
@@ -80,50 +82,88 @@ def fancyPrint(distanceMatrix, source, target):
     
     print("Minimum edit distance: " + str(distanceMatrix[0][len(target)]) + "\n")
 
+# prints the alignment between the source and target strings
 def printAlignment(distanceMatrix, source, target):
+    # create a list of steps for the transformation
     pathMatrix = findPath(distanceMatrix, source, target)
-    print(str(pathMatrix))
+    print(pathMatrix) # debug
+    
+    # generate alignment of source and target strings
+    # Unicode character is Greek small epsilon,
+    #   as used in 'Speech and Language Processing' by Jurafsky and Martin
+    sourceOutput = ""
+    targetOutput = ""
+    sourceIndex = 0
+    targetIndex = 0
+    for step in pathMatrix:
+        if step == "S" or step == "s": # substitution
+            sourceOutput += source[sourceIndex]
+            sourceIndex += 1
+            targetOutput += target[targetIndex]
+            targetIndex += 1
+        elif step == "d": # deletion
+            sourceOutput += source[sourceIndex]
+            sourceIndex += 1
+            targetOutput += u"\u03B5"
+        elif step == "i": # insertion
+            sourceOutput += u"\u03B5"
+            targetOutput += target[targetIndex]
+            targetIndex += 1
+        sourceOutput += " "
+        targetOutput += " "
+    
+    # print alignment
+    print(sourceOutput)
+    print(targetOutput)
 
+# find the steps to transform the source to the target
 def findPath(distanceMatrix, source, target):
     pathMatrix = []
     
-    currentY = 0
-    currentX = 0
-    currentValue = delValue = insValue = subValue = 0
-    canDel = False
-    canIns = False
-    canSub = False
-    while not (currentY == len(source) and currentX == len(target)):
+    currentY = len(source) # current Y coordinate in the distance matrix
+    currentX = len(target) # current X coordinate in the distance matrix
+    canDel = False # whether a deletion could be used to get to this point
+    canIns = False # whether an insertion could be used to get to this point
+    canSub = False # whether a substitution could be used to get to this point
+    
+    # iterate from the top right until we reach the bottom left of the distance matrix
+    while not (currentY == 0 and currentX == 0):
         currentValue = distanceMatrix[currentY][currentX]
         
-        if currentY < len(source) and currentX < len(target):
-            subValue = distanceMatrix[currentY + 1][currentX + 1]
-            if subValue == currentValue or subValue == currentValue + 2:
+        # check which instruction could be used to reach this point
+        if currentY > 0 and currentX > 0: # check for substitution
+            subValue = distanceMatrix[currentY - 1][currentX - 1]
+            if subValue == currentValue or subValue == currentValue - 2:
                 canSub = True
-        elif currentX < len(target):
-            insValue = distanceMatrix[currentY][currentX + 1]
-            if insValue == currentValue + 1:
+        elif currentX > 0: # check for insertion
+            insValue = distanceMatrix[currentY][currentX - 1]
+            if insValue == currentValue - 1:
                 canIns = True
-        elif currentY < len(source):
-            delValue = distanceMatrix[currentY + 1][currentX]
-            if delValue == currentValue + 1:
+        elif currentY > 0: # check for deletion
+            delValue = distanceMatrix[currentY - 1][currentX]
+            if delValue == currentValue - 1:
                 canDel = True
         
-        if canSub == True and subValue == currentValue:
+        # keep the cheapest possible step
+        if canSub == True and subValue == currentValue: # 0-cost substitution
             pathMatrix.append("S")
-            currentY += 1
-            currentX += 1
-        elif canDel:
+            currentY -= 1
+            currentX -= 1
+        elif canDel: # deletion
             pathMatrix.append("d")
-            currentY += 1
-        elif canIns:
+            currentY -= 1
+        elif canIns: # insertion
             pathMatrix.append("i")
-            currentX += 1
-        elif canSub:
+            currentX -= 1
+        elif canSub: # 2-cost substitution
             pathMatrix.append("s")
-            currentY += 1
-            currentX += 1
+            currentY -= 1
+            currentX -= 1
+        else: # debug
+            print("I'm stuck")
+            break
         
+        # reset the booleans for the next iteration
         canDel = canIns = canSub = False
     
     return pathMatrix
