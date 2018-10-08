@@ -135,18 +135,23 @@ def findPath(distanceMatrix, source, target):
             subValue = distanceMatrix[currentY - 1][currentX - 1]
             if subValue == currentValue or subValue == currentValue - 2:
                 canSub = True
-        elif currentX > 0: # check for insertion
+        if currentX > 0: # check for insertion
             insValue = distanceMatrix[currentY][currentX - 1]
             if insValue == currentValue - 1:
                 canIns = True
-        elif currentY > 0: # check for deletion
+        if currentY > 0: # check for deletion
             delValue = distanceMatrix[currentY - 1][currentX]
             if delValue == currentValue - 1:
                 canDel = True
         
-        # keep the cheapest possible step
-        if canSub == True and subValue == currentValue: # 0-cost substitution
+        # add the best step to the path
+        print canDel, canIns, canSub
+        if canSub and subValue == currentValue: # 0-cost substitution
             pathMatrix.append("S")
+            currentY -= 1
+            currentX -= 1
+        elif canSub: # 2-cost substitution
+            pathMatrix.append("s")
             currentY -= 1
             currentX -= 1
         elif canDel: # deletion
@@ -154,10 +159,6 @@ def findPath(distanceMatrix, source, target):
             currentY -= 1
         elif canIns: # insertion
             pathMatrix.append("i")
-            currentX -= 1
-        elif canSub: # 2-cost substitution
-            pathMatrix.append("s")
-            currentY -= 1
             currentX -= 1
         else: # debug
             print("I'm stuck")
