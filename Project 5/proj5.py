@@ -86,7 +86,6 @@ def fancyPrint(distanceMatrix, source, target):
 def printAlignment(distanceMatrix, source, target):
     # create a list of steps for the transformation
     pathMatrix = findPath(distanceMatrix, source, target)
-    print(pathMatrix) # debug
     
     # generate alignment of source and target strings
     # Unicode character is Greek small epsilon,
@@ -104,9 +103,9 @@ def printAlignment(distanceMatrix, source, target):
         elif step == "d": # deletion
             sourceOutput += source[sourceIndex]
             sourceIndex += 1
-            targetOutput += u"\u03B5"
+            targetOutput += "*"
         elif step == "i": # insertion
-            sourceOutput += u"\u03B5"
+            sourceOutput += "*"
             targetOutput += target[targetIndex]
             targetIndex += 1
         sourceOutput += " "
@@ -114,6 +113,9 @@ def printAlignment(distanceMatrix, source, target):
     
     # print alignment
     print(sourceOutput)
+    for i in range(len(sourceOutput) / 2):
+        print("|"),
+    print # newline
     print(targetOutput)
 
 # find the steps to transform the source to the target
@@ -145,7 +147,6 @@ def findPath(distanceMatrix, source, target):
                 canDel = True
         
         # add the best step to the path
-        print canDel, canIns, canSub
         if canSub and subValue == currentValue: # 0-cost substitution
             pathMatrix.append("S")
             currentY -= 1
