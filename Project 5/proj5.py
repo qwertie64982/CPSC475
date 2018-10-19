@@ -24,16 +24,17 @@ def main():
         printAlignment(distanceMatrix, source, target)
 
 # fills the distance matrix
+# (value, ins, del, sub)
 def fillDistanceMatrix(source, target):
     # initialize the matrix
-    distanceMatrix = [[0]]
+    distanceMatrix = [[(0, False, False, False)]]
     
     # steps 1 and 2 - fill the x-axis
-    distanceMatrix[0] = [i for i in range(len(target) + 1)]
+    distanceMatrix[0] = [(i, True, False, False) for i in range(len(target) + 1)]
     
     # step 3 - fill the y-axis
     for j in range(len(source)):
-        distanceMatrix.append([j + 1])
+        distanceMatrix.append([(j + 1, False, True, False)])
     
     # step 4 - fill the rest of the values
     for x in range(1, len(target) + 1):
@@ -44,18 +45,38 @@ def fillDistanceMatrix(source, target):
 
 # finds the value for a non-edge item in the distance matrix (step 4)
 def minDistance(distanceMatrix, x, y, source, target):
-    # cost of inserting/deleting is always the same
-    delValue = distanceMatrix[y-1][x] + 1
-    insValue = distanceMatrix[y][x-1] + 1
-    
     # cost of substitution depends on whether or not the chars match
     if target[x-1] == source[y-1]:
-        subValue = distanceMatrix[y-1][x-1]
+        subValue = distanceMatrix[y-1][x-1][0]
     else:
-        subValue = distanceMatrix[y-1][x-1] + 2
+        subValue = distanceMatrix[y-1][x-1][0] + 2
+    
+    # cost of inserting/deleting is always the same
+    delValue = distanceMatrix[y-1][x][0] + 1
+    insValue = distanceMatrix[y][x-1][0] + 1
     
     # return the smallest of these values
-    return min(delValue, insValue, subValue)
+    canIns = False
+    canDel = False
+    canSub = False
+    if min(insValue, delValue, subValue) == insValue:
+        if insValue == delValue:
+            canDel = True
+        if insValue == subValue:
+            canSub = True
+        return (insValue, True, canDel, canSub)
+    elif min(insValue, delValue, subValue) == delValue:
+        if delValue == insValue:
+            canIns = True
+        if delValue == subValue:
+            canSub = True
+        return (delValue, canIns, True, canSub)
+    elif min(insValue, delValue, subValue) == subValue:
+        if subValue == insValue:
+            canIns = True
+        if subValue == delValue:
+            canDel = True
+        return (subValue, canIns, canDel, True)
 
 # prints the distance matrix with labels on the axes
 # as well as the minimum edit distance
@@ -68,10 +89,20 @@ def fancyPrint(distanceMatrix, source, target):
     
     # print all rows with the source on the left (all but bottom)
     for i in range(len(distanceMatrix) - 1):
-        print(source[i] + " " + str(distanceMatrix[i]))
+        print(source[i]),
+        for value in distanceMatrix[i]:
+            if value[0] < 10:
+                print(""),
+            print(value[0]),
+        print
     
     # print the row with the # on the left (bottom)
-    print("# " + str(distanceMatrix[len(distanceMatrix) - 1]))
+    print("#"),
+    for value in distanceMatrix[len(distanceMatrix) - 1]:
+        if value[0] < 10:
+            print(""),
+        print(value[0]),
+    print
     
     # print the # and target word below the matrix
     print("   # "),
@@ -80,7 +111,7 @@ def fancyPrint(distanceMatrix, source, target):
     
     print("\n") # 2 newlines
     
-    print("Minimum edit distance: " + str(distanceMatrix[0][len(target)]) + "\n")
+    print("Minimum edit distance: " + str(distanceMatrix[0][len(target)][0]) + "\n")
 
 # prints the alignment between the source and target strings
 def printAlignment(distanceMatrix, source, target):
@@ -124,34 +155,19 @@ def findPath(distanceMatrix, source, target):
     
     currentY = len(source) # current Y coordinate in the distance matrix
     currentX = len(target) # current X coordinate in the distance matrix
-    canDel = False # whether a deletion could be used to get to this point
     canIns = False # whether an insertion could be used to get to this point
+    canDel = False # whether a deletion could be used to get to this point
     canSub = False # whether a substitution could be used to get to this point
     
     # iterate from the top right until we reach the bottom left of the distance matrix
     while not (currentY == 0 and currentX == 0):
-        currentValue = distanceMatrix[currentY][currentX]
-        
-        # check which instruction could be used to reach this point
-        if currentY > 0 and currentX > 0: # check for substitution
-            subValue = distanceMatrix[currentY - 1][currentX - 1]
-            if subValue == currentValue or subValue == currentValue - 2:
-                canSub = True
-        if currentX > 0: # check for insertion
-            insValue = distanceMatrix[currentY][currentX - 1]
-            if insValue == currentValue - 1:
-                canIns = True
-        if currentY > 0: # check for deletion
-            delValue = distanceMatrix[currentY - 1][currentX]
-            if delValue == currentValue - 1:
-                canDel = True
+        currentValue = distanceMatrix[currentY][currentX][0]
+        canIns = distanceMatrix[currentY][currentX][1]
+        canDel = distanceMatrix[currentY][currentX][2]
+        canSub = distanceMatrix[currentY][currentX][3]
         
         # add the best step to the path
-        if canSub and subValue == currentValue: # 0-cost substitution
-            pathMatrix.append("S")
-            currentY -= 1
-            currentX -= 1
-        elif canSub: # 2-cost substitution
+        if canSub: # substitution always checked first in case of 0-cost sub
             pathMatrix.append("s")
             currentY -= 1
             currentX -= 1
@@ -168,6 +184,7 @@ def findPath(distanceMatrix, source, target):
         # reset the booleans for the next iteration
         canDel = canIns = canSub = False
     
-    return pathMatrix
+    print(str(pathMatrix))
+    return pathMatrix[::-1]
 
 main()
