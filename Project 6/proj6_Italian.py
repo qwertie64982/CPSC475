@@ -10,8 +10,9 @@ Due: 2018-10-26 18:00 PDT
 from random import randint
 
 def main():
+    # tuples contain: (word, relative frequency, cumulative probability)
     corpus = [("al", .3, .3), ("tavola", .1, .4), ("non", .05, .45), ("ci", .05, .5), ("invecchia", .4, .9), ("mai", .1, 1)]
-    corpus = sorted(corpus, key=lambda cumulativeFreq: cumulativeFreq[2]) # sort corpus by the third item in every tuple (cumulative frequency)
+    # corpus = sorted(corpus, key=lambda cumulativeFreq: cumulativeFreq[2]) # sort corpus by the third item in every tuple (cumulative probability) - NOT NEEDED B/C LIST IS ORDERED
     
     randomDecimal = randint(0, 100)/100.0
     runningMax = 0.0
