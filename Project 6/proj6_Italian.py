@@ -3,7 +3,7 @@ Team Member #1: Maxwell Sherman
 Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
 Project 6: This program explores unigrams by generating an Italian word based on a corpus. 
-Usage: python proj6.py
+Usage: python proj6_Italian.py
 Due: 2018-10-26 18:00 PDT
 '''
 
