@@ -2,7 +2,7 @@
 Team Member #1: Maxwell Sherman
 Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
-Project 2: This program calculates the minimum edit distance between two words
+Project 5: This program calculates the minimum edit distance between two words
 Usage: python proj5.py {source} {target}
 Due: 2018-10-05 18:00 PDT, extension to 2018-10-08 18:00 PDT
 '''

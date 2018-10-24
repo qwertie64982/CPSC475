@@ -2,7 +2,7 @@
 Team Member #1: Maxwell Sherman
 Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
-Project 2: This project graphs interest of a specific word in US Presidential inaugural addresses over time
+Project 3: This project graphs interest of a specific word in US Presidential inaugural addresses over time
 Usage: Run proj3_prep.py to generate proj3.pkl, then run proj3.py from the same directory
 Due: 2018-09-14 18:00 PDT
 '''

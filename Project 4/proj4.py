@@ -2,7 +2,7 @@
 Team Member #1: Maxwell Sherman
 Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
-Project 2: This program is a Soundex algorithm FST
+Project 4: This program is a Soundex algorithm FST
 Usage: python proj4.py {name}
 Due: 2018-09-28 18:00 PDT
 '''
