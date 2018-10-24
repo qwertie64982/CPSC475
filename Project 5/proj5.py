@@ -126,7 +126,7 @@ def printAlignment(distanceMatrix, source, target):
     sourceIndex = 0
     targetIndex = 0
     for step in pathMatrix:
-        if step == "S" or step == "s": # substitution
+        if step == "s": # substitution
             sourceOutput += source[sourceIndex]
             sourceIndex += 1
             targetOutput += target[targetIndex]
@@ -143,11 +143,16 @@ def printAlignment(distanceMatrix, source, target):
         targetOutput += " "
     
     # print alignment
-    print(sourceOutput)
+    print("Alignment:"),
+    for instruction in pathMatrix:
+        print(instruction),
+    print # newline
+    print("Source:    " + sourceOutput)
+    print("          "),
     for i in range(len(sourceOutput) / 2):
         print("|"),
     print # newline
-    print(targetOutput)
+    print("Target:    " + targetOutput)
 
 # find the steps to transform the source to the target
 def findPath(distanceMatrix, source, target):
@@ -184,7 +189,6 @@ def findPath(distanceMatrix, source, target):
         # reset the booleans for the next iteration
         canDel = canIns = canSub = False
     
-    print(str(pathMatrix))
     return pathMatrix[::-1]
 
 main()
