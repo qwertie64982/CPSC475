@@ -2,19 +2,23 @@
 Team Member #1: Maxwell Sherman
 Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
-Project 7A: This program tokenizes the shakespeare corpus
+Project 7A: This program tokenizes the Shakespeare corpus
 Usage: python proj7a.py
 Due: 2018-11-09 18:00 PDT
 '''
 
-from nltk import bigrams
+import nltk
 import re
 
 def main():
     rawFileData = readFile("shakespeare.txt")
     tokenizedCorpus = tokenize(rawFileData)
+    
+    unigramsList = generateUnigrams(tokenizedCorpus)
     bigramsList = generateBigrams(tokenizedCorpus)
-    print bigramsList[0:10]
+    trigramsList = generateTrigrams(tokenizedCorpus)
+    quadgramsList = generateQuadgrams(tokenizedCorpus)
+    print quadgramsList[0:10]
     
 def readFile(filename):
     try:
@@ -34,7 +38,7 @@ def tokenize(rawString):
     # make words only lowercase basic Latin letters, as well as ' and -
     for i, sentence in enumerate(tokenizedCorpus):
         for j, word in enumerate(sentence):
-            tokenizedCorpus[i][j] = re.sub("[.,:;?!()`\"]+|[0-9]+", "", word.lower()) # make lowercase, remove numbers, remove special chars except ' and -
+            tokenizedCorpus[i][j] = re.sub("[.,:;?!()`\"\[\]]+|[0-9]+", "", word.lower()) # make lowercase, remove numbers, remove special chars except ' and -
         # tokenizedCorpus[i] = filter(None, tokenizedCorpus[i]) # remove empty strings from sentences
         # tokenizedCorpus[i] = filter(lambda word: word != "\'\'" and word != "--", tokenizedCorpus[i]) # remove strange '' and -- words
     tokenizedCorpus = filter(None, tokenizedCorpus) # remove empty sentences []
@@ -47,10 +51,32 @@ def tokenize(rawString):
     
     return tokenizedCorpus
 
+def generateUnigrams(tokenizedCorpus):
+    unigramsList = []
+    for sentence in tokenizedCorpus:
+        for word in sentence:
+            if word != "<s>" and word != "</s>":
+                unigramsList.append(word)
+    return unigramsList
+
 def generateBigrams(tokenizedCorpus):
     bigramsList = []
     for sentence in tokenizedCorpus:
-        bigramsList.extend(list(bigrams(sentence)))
+        bigramsList.extend(list(nltk.bigrams(sentence)))
     return bigramsList
+
+def generateTrigrams(tokenizedCorpus):
+    trigramsList = []
+    for sentence in tokenizedCorpus:
+        if len(sentence) >= 3:
+            trigramsList.extend(list(nltk.trigrams(sentence)))
+    return trigramsList
+
+def generateQuadgrams(tokenizedCorpus):
+    quadgramsList = []
+    for sentence in tokenizedCorpus:
+        if len(sentence) >= 4:
+            quadgramsList.extend(list(nltk.ngrams(sentence, 4)))
+    return quadgramsList
 
 main()
