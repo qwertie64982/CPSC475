@@ -11,21 +11,32 @@ import nltk
 import pickle
 import re
 
+# main driver function
 def main():
     # read and tokenize data
+    print("Reading file...")
     rawFileData = readFile("shakespeare.txt")
+    print("Tokenizing...")
     tokenizedCorpus = tokenize(rawFileData)
     
     # generate n-grams
+    print("Generating unigrams...")
     unigramsList = generateUnigrams(tokenizedCorpus)
+    print("Generating bigrams...")
     bigramsList = generateBigrams(tokenizedCorpus)
+    print("Generating trigrams...")
     trigramsList = generateTrigrams(tokenizedCorpus)
+    print("Generating quadgrams...")
     quadgramsList = generateQuadgrams(tokenizedCorpus)
     
     # calculate Bogensberger-Johnson matrices
+    print("Calculating unigrams Bogensberger-Johnson matrix...")
     unigramsMatrix = calculateBGM(unigramsList)
+    print("Calculating bigrams Bogensberger-Johnson matrix...")
     bigramsMatrix = calculateBGM(bigramsList)
+    print("Calculating trigrams Bogensberger-Johnson matrix...")
     trigramsMatrix = calculateBGM(trigramsList)
+    print("Calculating quadgrams Bogensberger-Johnson matrix...")
     quadgramsMatrix = calculateBGM(quadgramsList)
     
     # write matrices to pickle file
@@ -34,9 +45,13 @@ def main():
     except:
         print("File write error")
         raise SystemExit
+    print("Writing unigrams matrix to file...")
     pickle.dump(unigramsMatrix, outFile)
+    print("Writing bigrams matrix to file...")
     pickle.dump(bigramsMatrix, outFile)
+    print("Writing trigrams matrix to file...")
     pickle.dump(trigramsMatrix, outFile)
+    print("Writing quadgrams matrix to file...")
     pickle.dump(quadgramsMatrix, outFile)
     outFile.close()
     
