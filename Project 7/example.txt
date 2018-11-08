@@ -4,55 +4,19 @@ Importing trigrams matrix...
 Importing quadgrams matrix...
 
 UNIGRAMS:
-To world hotspur it my in cry and your against ay the.
-Out he you me reprieve the to thou thou says to shearers.
-That news percy heartily won honest of this the till to go.
-His our and love a he regan you to a are constancy.
-His and the sure a other any is and sea bid must.
+Mighty some romans juliet every daughter holofernes abhorred that wantonness second you.
+Tent but assume clarence's sad that seeing all it sir to in.
 
 BIGRAMS:
-searching for <s>
-searching for how
-searching for now
-searching for my
-searching for leave
-[('<s>', 'how'), ('how', 'now'), ('now', 'my'), ('my', 'leave'), ('leave', 'i'), ('impatience', '</s>')]
-searching for <s>
-searching for mopsa
-searching for can
-searching for do
-searching for you
-[('<s>', 'mopsa'), ('mopsa', 'can'), ('can', 'do'), ('do', 'you'), ('you', 'not'), ('tranio', '</s>')]
-searching for <s>
-searching for brother
-searching for daughter
-searching for and
-searching for proceed
-[('<s>', 'brother'), ('brother', 'daughter'), ('daughter', 'and'), ('and', 'proceed'), ('proceed', 'moon'), ('set', '</s>')]
-searching for <s>
-searching for that
-searching for thou
-searching for mayst
-searching for prove
-[('<s>', 'that'), ('that', 'thou'), ('thou', 'mayst'), ('mayst', 'prove'), ('prove', 'it'), ('sight', '</s>')]
-searching for <s>
-searching for to
-searching for weeds
-searching for take
-searching for it
-[('<s>', 'to'), ('to', 'weeds'), ('weeds', 'take'), ('take', 'it'), ('it', 'is'), ('is', '</s>')]
+My tent to see me for.
+Ourselves in 's too great town.
 
 TRIGRAMS:
-todo
-todo
-todo
-todo
-todo
+Sir toby i do perceive't achilles.
+Nor will me beseech ye them off.
 
 QUADGRAMS:
-todo
-todo
-todo
-todo
-todo
+And harsh in question our necessities lord talbot was.
+To answer such noble scenes as with your eye.
+
 

@@ -9,6 +9,7 @@ Due: 2018-11-09 18:00 PDT
 
 import pickle
 from random import randint
+import re
 
 # main driver function
 def main():
@@ -30,22 +31,22 @@ def main():
     print # newline
     
     print("UNIGRAMS:")
-    for i in range(5):
+    for i in range(2):
         print(newSentence(unigramsMatrix, 1))
     print # newline
     
     print("BIGRAMS:")
-    for i in range(5):
+    for i in range(2):
         print(newSentence(bigramsMatrix, 2))
     print # newline
     
     print("TRIGRAMS:")
-    for i in range(5):
+    for i in range(2):
         print(newSentence(trigramsMatrix, 3))
     print # newline
     
     print("QUADGRAMS:")
-    for i in range(5):
+    for i in range(2):
         print(newSentence(quadgramsMatrix, 4))
     print # newline
 
@@ -55,15 +56,28 @@ def newSentence(ngramsMatrix, n):
         return newUnigramSentence(ngramsMatrix)
     elif n == 2:
         ngramList = []
-        ngramList.append(newNgram((None, "<s>"), ngramsMatrix)) # <s>
+        ngramList.append(newNgram((None, "<s>"), ngramsMatrix, n)) # <s>
         for i in range(4): # 6 - 2 (start and end)
-            ngramList.append(newNgram(ngramList[i], ngramsMatrix))
-        ngramList.append(endingNgram(ngramsMatrix)) # </s>
-        return str(ngramList) # TODO: when actually formatting the sentence, just read ngram[0] for all but the first
+            ngramList.append(newNgram(ngramList[i], ngramsMatrix, n))
+        ngramList.append(endingNgram(ngramsMatrix, n)) # </s>
+        # print str(ngramList)
+        return renderSentence(ngramList, n)
     elif n == 3:
-        return "todo"
+        ngramList = []
+        ngramList.append(newNgram((None, None, "<s>"), ngramsMatrix, n)) # <s>
+        for i in range(2): # 4 - 2 (start and end)
+            ngramList.append(newNgram(ngramList[i], ngramsMatrix, n))
+        ngramList.append(endingNgram(ngramsMatrix, n)) # </s>
+        # print(str(ngramList))
+        return renderSentence(ngramList, n)
     elif n == 4:
-        return "todo"
+        ngramList = []
+        ngramList.append(newNgram((None, None, None, "<s>"), ngramsMatrix, n)) # <s>
+        for i in range(1): # 3 - 2 (start and end)
+            ngramList.append(newNgram(ngramList[i], ngramsMatrix, n))
+        ngramList.append(endingNgram(ngramsMatrix, n)) # </s>
+        # print (str(ngramList))
+        return renderSentence(ngramList, n)
     else:
         print("Unsupported n-gram")
         raise SystemExit
@@ -92,31 +106,70 @@ def newWord(unigramsMatrix):
             break
     return selectedWord
 
-def newNgram(target, ngramsMatrix):
-    selectedNgram = (None, None)
-    print "searching for " + target[1]
-    while selectedNgram[0] != target[1] or selectedNgram[1] == "</s>":
+def newNgram(target, ngramsMatrix, n):
+    selectedNgram = (None, None, None, None)
+    # print("searching for " + target[n-1])
+    while selectedNgram[0] != target[n-1] or selectedNgram[n-1] == "</s>":
         randomDecimal = randint(0, 10000000000) / 10000000000.0
         runningMax = 0.0
-        for ngram in ngramsMatrix:
-            if ngram[2] > runningMax:
-                runningMax = ngram[2]
-                selectedNgram = ngram[0]
+        for item in ngramsMatrix:
+            if item[2] > runningMax:
+                runningMax = item[2]
+                selectedNgram = item[0]
+            if runningMax > randomDecimal:
+                break
+        # print("Checking " + selectedNgram[0])
+    return selectedNgram
+
+def endingNgram(ngramsMatrix, n):
+    selectedNgram = (None, None, None, None)
+    # print("Finding final ngram")
+    while selectedNgram[n-1] != "</s>":
+        randomDecimal = randint(0, 10000000000) / 10000000000.0
+        runningMax = 0.0
+        for item in ngramsMatrix:
+            if item[2] > runningMax:
+                runningMax = item[2]
+                selectedNgram = item[0]
             if runningMax > randomDecimal:
                 break
     return selectedNgram
 
-def endingNgram(ngramsMatrix):
-    selectedNgram = (None, None)
-    while selectedNgram[1] != "</s>":
-        randomDecimal = randint(0, 10000000000) / 10000000000.0
-        runningMax = 0.0
-        for ngram in ngramsMatrix:
-            if ngram[2] > runningMax:
-                runningMax = ngram[2]
-                selectedNgram = ngram[0]
-            if runningMax > randomDecimal:
-                break
-    return selectedNgram
+def renderSentence(ngramList, n):
+    # print("Rendering sentence")
+    completedSentence = ""
+    if n == 2:
+        for i in range(1, len(ngramList)): # read ngram[0] for all but the first
+            if i == len(ngramList) - 1:
+                completedSentence += (ngramList[i-1][1] + " ")
+            completedSentence += (ngramList[i][0] + " ")
+    elif n == 3:
+        completedSentence += (ngramList[0][1] + " ")
+        for i in range(1, len(ngramList)): # read ngram[0] for all but the first
+            if i == len(ngramList) - 1:
+                completedSentence += (ngramList[i-1][1] + " ")
+                completedSentence += (ngramList[i-1][2] + " ")
+                completedSentence += (ngramList[i][0] + " ")
+                completedSentence += (ngramList[i][1] + " ")
+            else:
+                completedSentence += (ngramList[i][0] + " ")
+    elif n == 4:
+        completedSentence += (ngramList[0][1] + " ")
+        completedSentence += (ngramList[0][2] + " ")
+        for i in range(1, len(ngramList)): # read ngram[0] for all but the first
+            if i == len(ngramList) - 1:
+                completedSentence += (ngramList[i-1][1] + " ")
+                completedSentence += (ngramList[i-1][2] + " ")
+                completedSentence += (ngramList[i-1][3] + " ")
+                completedSentence += (ngramList[i][0] + " ")
+                completedSentence += (ngramList[i][1] + " ")
+                completedSentence += (ngramList[i][2] + " ")
+            else:
+                completedSentence += (ngramList[i][0] + " ")
+    completedSentence = completedSentence[0].capitalize() + completedSentence[1:] # capitalize first letter
+    completedSentence = completedSentence[:-1] # remove last space
+    completedSentence += "."
+    completedSentence = re.sub("<s> ", "", completedSentence) # remove <s> in cases like ('<s>', 'kent', '</s>')
+    return completedSentence
 
 main()
