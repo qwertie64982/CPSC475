@@ -106,6 +106,8 @@ def newWord(unigramsMatrix):
             break
     return selectedWord
 
+# generates a new ngram based on a Bogensberger-Johnson n-gram matrix
+# TODO: make a new list of just the n-grams that match the requirement and pick from just them
 def newNgram(target, ngramsMatrix, n):
     selectedNgram = (None, None, None, None)
     # print("searching for " + target[n-1])
@@ -135,15 +137,16 @@ def endingNgram(ngramsMatrix, n):
                 break
     return selectedNgram
 
+# renders an entire sentence from a list of n-grams
 def renderSentence(ngramList, n):
     # print("Rendering sentence")
     completedSentence = ""
-    if n == 2:
+    if n == 2: # bigrams
         for i in range(1, len(ngramList)): # read ngram[0] for all but the first
             if i == len(ngramList) - 1:
                 completedSentence += (ngramList[i-1][1] + " ")
             completedSentence += (ngramList[i][0] + " ")
-    elif n == 3:
+    elif n == 3: # trigrams
         completedSentence += (ngramList[0][1] + " ")
         for i in range(1, len(ngramList)): # read ngram[0] for all but the first
             if i == len(ngramList) - 1:
@@ -153,7 +156,7 @@ def renderSentence(ngramList, n):
                 completedSentence += (ngramList[i][1] + " ")
             else:
                 completedSentence += (ngramList[i][0] + " ")
-    elif n == 4:
+    elif n == 4: # quadgrams
         completedSentence += (ngramList[0][1] + " ")
         completedSentence += (ngramList[0][2] + " ")
         for i in range(1, len(ngramList)): # read ngram[0] for all but the first
@@ -168,7 +171,7 @@ def renderSentence(ngramList, n):
                 completedSentence += (ngramList[i][0] + " ")
     completedSentence = completedSentence[0].capitalize() + completedSentence[1:] # capitalize first letter
     completedSentence = completedSentence[:-1] # remove last space
-    completedSentence += "."
+    completedSentence += "." # add period to end
     completedSentence = re.sub("<s> ", "", completedSentence) # remove <s> in cases like ('<s>', 'kent', '</s>')
     return completedSentence
 
