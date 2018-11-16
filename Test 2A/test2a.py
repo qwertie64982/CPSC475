@@ -22,6 +22,7 @@ def forward(states, observations, sequence):
     forward = [[0 for observation in sequence] for state in range(len(states))]
     
     forward = initialize(forward, states, observations, sequence)
+    forward = fill(forward, states, observations, sequence)
     
     for row in forward:
         print str(row)
@@ -29,7 +30,17 @@ def forward(states, observations, sequence):
 
 def initialize(forward, states, observations, sequence):
     for stateIndex in range(len(forward)):
-        forward[stateIndex][0] = states[stateIndex][0] * observations[stateIndex][sequence[0]-1]
+        forward[stateIndex][0] = states[0][stateIndex] * observations[stateIndex][sequence[0]-1]
+    return forward
+
+def fill(forward, states, observations, sequence):
+    for seqIndex in range(1, len(sequence)): # -1 because we already did the first column
+        for stateIndex in range(len(forward)):
+            probSum = 0.0
+            for stateIndex2 in range(len(forward)):
+                probSum += forward[stateIndex2][seqIndex-1] * states[stateIndex2][stateIndex] * observations[stateIndex2][sequence[seqIndex]-1]
+            forward[stateIndex][seqIndex] = probSum
+    
     return forward
 
 main()
