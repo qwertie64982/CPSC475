@@ -19,24 +19,17 @@ def main():
     forwardProb = forward(states, observations, sequence)
 
 def forward(states, observations, sequence):
-    numStates = len(states)
-    lenSequence = len(sequence)
-    forward = [[0 for j in range(lenSequence + 2)] for i in range(numStates + 2)]
-    forward[0][0] = 1.0
-    for t in range(lenSequence):
-        for s in range(numStates):
-            for transitionIndex in range(len(states[s])):
-                x = forward[s][t]
-                y = states[s][transitionIndex]
-                z = observations[transitionIndex][sequence[t]-1]
-                # print x,
-                # print y,
-                # print z,
-                print x * y * z,
-                print "into [" + str(transitionIndex) + "][" + str(t+1) + "]" # TODO: Why does it overwrite?
-                
-                forward[transitionIndex][t+1] = x * y * z
-    print str(forward)
+    forward = [[0 for observation in sequence] for state in range(len(states))]
+    
+    forward = initialize(forward, states, observations, sequence)
+    
+    for row in forward:
+        print str(row)
     return 0
+
+def initialize(forward, states, observations, sequence):
+    for stateIndex in range(len(forward)):
+        forward[stateIndex][0] = states[stateIndex][0] * observations[stateIndex][sequence[0]-1]
+    return forward
 
 main()
