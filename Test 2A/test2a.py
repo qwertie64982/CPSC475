@@ -14,7 +14,6 @@ def main():
     states = [[0.0, 0.5, 0.5, 0.0], [0.0, 0.7, 0.2, 0.1], [0.0, 0.2, 0.7, 0.1], [0.0, 0.0, 0.0, 0.0]] # A-matrix
     observations = [[0.0, 0.0, 0.0], [0.6, 0.3, 0.1], [0.1, 0.3, 0.6], [0.0, 0.0, 0.0]] # B-matrix
     
-    # check for anything other than 1, 2, 3 in numbers, if so return 0, as well as length (>0)
     sequence = sys.argv
     if len(sequence) < 2:
         print("ERROR: You must provide at least 1 observation")
@@ -23,6 +22,8 @@ def main():
     for i in range(len(sequence)):
         try:
             sequence[i] = int(sequence[i])
+            if sequence[i] < 1 or sequence[i] > 3:
+                printResults(0) # 0% probability of Eisner eating < 1 or > 3 ice cream cones in one day
         except ValueError:
             print("ERROR: Arguments must all be numbers")
             sys.exit(1)
@@ -30,7 +31,7 @@ def main():
     forwardMatrix = forward(states, observations, sequence)
     
     endingProb = sumEnds(forwardMatrix)
-    print(endingProb)
+    printResults(endingProb)
 
 def forward(states, observations, sequence):
     forward = [[0 for observation in sequence] for state in range(len(states))]
@@ -58,5 +59,9 @@ def sumEnds(forward):
     for i in range(len(forward)):
         endingProb += forward[i][-1]
     return endingProb
+
+def printResults(endingProb):
+    print("Probability: " + str(100 * endingProb) + "%")
+    sys.exit(0) # if printResults() is called when a 0% probability number is discovered
 
 main()
