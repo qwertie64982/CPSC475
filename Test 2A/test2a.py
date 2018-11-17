@@ -72,7 +72,7 @@ def fill(forward, states, observations, sequence):
         for stateIndex in range(len(forward)):
             probSum = 0.0
             for stateIndex2 in range(len(forward)): # sum the probabilities of getting to this state from every previous possible state
-                probSum += forward[stateIndex2][seqIndex-1] * states[stateIndex2][stateIndex] * observations[stateIndex2][sequence[seqIndex]-1]
+                probSum += forward[stateIndex2][seqIndex-1] * states[stateIndex2][stateIndex] * observations[stateIndex][sequence[seqIndex]-1]
             forward[stateIndex][seqIndex] = probSum
     
     return forward
