@@ -72,9 +72,10 @@ def viterbi(states, observations, sequence):
 # fill the first column of the Viterbi trellis
 def initialize(viterbiMatrix, states, observations, sequence):
     for stateIndex in range(len(viterbiMatrix)):
-        newProb = states[0][stateIndex] * observations[stateIndex][sequence[sequence[0]-1]-1]
+        newProb = states[0][stateIndex] * observations[stateIndex][sequence[0]-1]
         if (viterbiMatrix[stateIndex][0] == 0 or newProb > viterbiMatrix[stateIndex][sequence[0]-1]):
             viterbiMatrix[stateIndex][0] = newProb
+    
     return viterbiMatrix
 
 # fill the rest of the columns in the Viterbi trellis
