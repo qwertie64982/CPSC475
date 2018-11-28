@@ -38,7 +38,7 @@ def main():
     # construct Viterbi trellis
     viterbiMatrix = viterbi(states, observations, sequence)
     
-    printResults(viterbiMatrix, len(sequence))
+    printResults(viterbiMatrix, len(sequence)-1)
 
 # read a CSV file into a list
 def readCSV(filename):
@@ -57,15 +57,10 @@ def readCSV(filename):
 def viterbi(states, observations, sequence):
     # make empty matrix
     viterbiMatrix = [[0 for observation in sequence] for state in range(len(states))]
-    # backPointers = [[-1 for observation in sequence] for state in range(len(states))]
     
     # fill matrix
     viterbiMatrix = initialize(viterbiMatrix, states, observations, sequence) # fill first column
     viterbiMatrix = fill(viterbiMatrix, states, observations, sequence) # fill following columns
-    
-    # for row in viterbiMatrix:
-    #     print row
-    # print
     
     return viterbiMatrix
 
@@ -86,21 +81,18 @@ def fill(viterbiMatrix, states, observations, sequence):
                 newProb = viterbiMatrix[stateIndex2][seqIndex-1] * states[stateIndex2][stateIndex] * observations[stateIndex][sequence[seqIndex]-1]
                 if (viterbiMatrix[stateIndex][seqIndex] == 0 or newProb > viterbiMatrix[stateIndex][seqIndex]):
                     viterbiMatrix[stateIndex][seqIndex] = newProb
-                    # backPointers[stateIndex][seqIndex] = stateIndex2
     
     return viterbiMatrix
 
 def printResults(viterbiMatrix, maxIndex):
-    statesList = [-1 for i in range(maxIndex)]
+    statesList = [-1 for i in range(maxIndex + 1)]
     
-    for i in range(maxIndex-1, -1, -1):
+    for i in range(maxIndex, -1, -1): # count backwards from the end of the matrix to the 0th item
         runningMax = 0.0
         for j, row in enumerate(viterbiMatrix):
             if row[i] > runningMax:
                 runningMax = row[i]
                 statesList[i] = j
-    
-    # print statesList
     
     # start and end are included here, but are unused due to the Viterbi matrix implementation
     print("State sequence:"),
