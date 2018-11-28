@@ -2,7 +2,7 @@
 Team Member #1: Maxwell Sherman
 Team Member #2: N/A
 Zagmail address for team member 1: msherman3@zagmail.gonzaga.edu
-Test 2A: This program implements the Viterbi algorithm on the Eisner problem
+Test 2B: This program implements the Viterbi algorithm on the Eisner problem
 Usage: python test2b.py matA.csv matB.csv 3 1 3 (3 1 3 is an example of an ice cream eating sequence)
 Due: 2018-11-30 18:00 PDT
 '''
