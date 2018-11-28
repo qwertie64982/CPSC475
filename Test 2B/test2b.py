@@ -36,12 +36,9 @@ def main():
             sys.exit(1)
     
     # construct Viterbi trellis
-    viterbiMatrix, backPointers = viterbi(states, observations, sequence)
+    viterbiMatrix = viterbi(states, observations, sequence)
     
-    printResults(viterbiMatrix, backPointers, len(sequence))
-    
-    # for line in viterbiMatrix:
-    #     print str(line)
+    printResults(viterbiMatrix, len(sequence))
 
 # read a CSV file into a list
 def readCSV(filename):
@@ -60,13 +57,17 @@ def readCSV(filename):
 def viterbi(states, observations, sequence):
     # make empty matrix
     viterbiMatrix = [[0 for observation in sequence] for state in range(len(states))]
-    backPointers = [[-1 for observation in sequence] for state in range(len(states))]
+    # backPointers = [[-1 for observation in sequence] for state in range(len(states))]
     
     # fill matrix
     viterbiMatrix = initialize(viterbiMatrix, states, observations, sequence) # fill first column
-    viterbiMatrix = fill(viterbiMatrix, backPointers, states, observations, sequence) # fill following columns
+    viterbiMatrix = fill(viterbiMatrix, states, observations, sequence) # fill following columns
     
-    return viterbiMatrix, backPointers
+    # for row in viterbiMatrix:
+    #     print row
+    # print
+    
+    return viterbiMatrix
 
 # fill the first column of the Viterbi trellis
 def initialize(viterbiMatrix, states, observations, sequence):
@@ -77,28 +78,26 @@ def initialize(viterbiMatrix, states, observations, sequence):
     return viterbiMatrix
 
 # fill the rest of the columns in the Viterbi trellis
-def fill(viterbiMatrix, backPointers, states, observations, sequence):
+def fill(viterbiMatrix, states, observations, sequence):
     for seqIndex in range(1, len(sequence)): # -1 because we already did the first column
         for stateIndex in range(len(viterbiMatrix)):
             for stateIndex2 in range(len(viterbiMatrix)): # find the largest of the probabilities of getting to this state from every previous possible state
                 newProb = viterbiMatrix[stateIndex2][seqIndex-1] * states[stateIndex2][stateIndex] * observations[stateIndex][sequence[seqIndex]-1]
                 if (viterbiMatrix[stateIndex][seqIndex] == 0 or newProb > viterbiMatrix[stateIndex][seqIndex]):
                     viterbiMatrix[stateIndex][seqIndex] = newProb
-                    backPointers[stateIndex][seqIndex] = stateIndex2
+                    # backPointers[stateIndex][seqIndex] = stateIndex2
     
     return viterbiMatrix
 
-def printResults(viterbiMatrix, backPointers, maxIndex):
-    statesList = [-1]
+def printResults(viterbiMatrix, maxIndex):
+    statesList = [-1 for i in range(maxIndex)]
     
-    runningMax = 0.0
-    for i, row in enumerate(viterbiMatrix):
-        if row[maxIndex-1] > runningMax:
-            runningMax = row[maxIndex-1]
-            statesList[0] = i
-    
-    for j in range(maxIndex-1, 0, -1):
-        statesList.append(backPointers[statesList[-1]][j])
+    for i in range(maxIndex-1, -1, -1):
+        runningMax = 0.0
+        for j, row in enumerate(viterbiMatrix):
+            if row[i] > runningMax:
+                runningMax = row[i]
+                statesList[i] = j
     
     # print statesList
     
