@@ -84,6 +84,7 @@ def fill(viterbiMatrix, states, observations, sequence):
     
     return viterbiMatrix
 
+# print the sequence of most probable weather events
 def printResults(viterbiMatrix, maxIndex):
     statesList = [-1 for i in range(maxIndex + 1)]
     
