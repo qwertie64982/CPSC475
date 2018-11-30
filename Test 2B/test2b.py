@@ -36,9 +36,9 @@ def main():
             sys.exit(1)
     
     # construct Viterbi trellis
-    viterbiMatrix = viterbi(states, observations, sequence)
+    viterbiMatrix, backPointers = viterbi(states, observations, sequence)
     
-    printResults(viterbiMatrix, len(sequence)-1)
+    printResults(viterbiMatrix, backPointers, len(sequence)-1)
 
 # read a CSV file into a list
 def readCSV(filename):
@@ -47,22 +47,26 @@ def readCSV(filename):
     result = numpy.array(inList).astype("float")
     return result
 
-# calculate Viterbi trellis
+# calculate Viterbi trellis and back pointer matrix
 # the trellis is represented as a 2D array, where 3, 1, 3 is the example sequence:
 #        3  1  3
 # start [ ][ ][ ]
 #  cold [ ][ ][ ]
 #   hot [ ][ ][ ]
 #   end [ ][ ][ ]
+# back pointers are stored in a parallel array, where each value is an index to the previous column
+# the first column is unused, it was just easier to program it that way
 def viterbi(states, observations, sequence):
-    # make empty matrix
+    # make empty matrix for Viterbi and back pointers
     viterbiMatrix = [[0 for observation in sequence] for state in range(len(states))]
+    # backPointers = [[-1 for state in range(len(states))] for observation in sequence]
+    backPointers = [[-1 for observation in sequence] for state in range(len(states))]
     
     # fill matrix
     viterbiMatrix = initialize(viterbiMatrix, states, observations, sequence) # fill first column
-    viterbiMatrix = fill(viterbiMatrix, states, observations, sequence) # fill following columns
+    viterbiMatrix = fill(viterbiMatrix, backPointers, states, observations, sequence) # fill following columns
     
-    return viterbiMatrix
+    return viterbiMatrix, backPointers
 
 # fill the first column of the Viterbi trellis
 def initialize(viterbiMatrix, states, observations, sequence):
@@ -74,26 +78,31 @@ def initialize(viterbiMatrix, states, observations, sequence):
     return viterbiMatrix
 
 # fill the rest of the columns in the Viterbi trellis
-def fill(viterbiMatrix, states, observations, sequence):
+def fill(viterbiMatrix, backPointers, states, observations, sequence):
     for seqIndex in range(1, len(sequence)): # -1 because we already did the first column
         for stateIndex in range(len(viterbiMatrix)):
             for stateIndex2 in range(len(viterbiMatrix)): # find the largest of the probabilities of getting to this state from every previous possible state
                 newProb = viterbiMatrix[stateIndex2][seqIndex-1] * states[stateIndex2][stateIndex] * observations[stateIndex][sequence[seqIndex]-1]
                 if (viterbiMatrix[stateIndex][seqIndex] == 0 or newProb > viterbiMatrix[stateIndex][seqIndex]):
                     viterbiMatrix[stateIndex][seqIndex] = newProb
+                    # backPointers[seqIndex][stateIndex] = stateIndex2
+                    backPointers[stateIndex][seqIndex] = stateIndex2
     
     return viterbiMatrix
 
 # print the sequence of most probable weather events
-def printResults(viterbiMatrix, maxIndex):
+def printResults(viterbiMatrix, backPointers, maxIndex):
+    
     statesList = [-1 for i in range(maxIndex + 1)]
     
-    for i in range(maxIndex, -1, -1): # count backwards from the end of the matrix to the 0th item
-        runningMax = 0.0
-        for j, row in enumerate(viterbiMatrix):
-            if row[i] > runningMax:
-                runningMax = row[i]
-                statesList[i] = j
+    runningMax = 0.0
+    for i, row in enumerate(viterbiMatrix):
+        if row[maxIndex] > runningMax:
+            runningMax = row[maxIndex]
+            statesList[maxIndex] = i
+    
+    for j in range(maxIndex, 0, -1):
+        statesList[j-1] = backPointers[statesList[-1]][j]
     
     # start and end are included here, but are unused due to the Viterbi matrix implementation
     print("State sequence:"),
