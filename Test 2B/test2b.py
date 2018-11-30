@@ -92,7 +92,6 @@ def fill(viterbiMatrix, backPointers, states, observations, sequence):
 
 # print the sequence of most probable weather events
 def printResults(viterbiMatrix, backPointers, maxIndex):
-    
     statesList = [-1 for i in range(maxIndex + 1)]
     
     runningMax = 0.0
