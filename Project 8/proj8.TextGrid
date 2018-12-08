@@ -31,7 +31,7 @@ item []:
         name = "fricatives" 
         xmin = 0 
         xmax = 2.9248125 
-        intervals: size = 18 
+        intervals: size = 5 
         intervals [1]:
             xmin = 0 
             xmax = 0.18620085918661272 
@@ -42,66 +42,14 @@ item []:
             text = "0.186201 - sh" 
         intervals [3]:
             xmin = 0.3681171402586009 
-            xmax = 0.5363211193541233 
+            xmax = 0.5655037033601451 
             text = "0.368117 - h" 
         intervals [4]:
-            xmin = 0.5363211193541233 
-            xmax = 0.5655037033601451 
-            text = "0.536321 - d" 
-        intervals [5]:
             xmin = 0.5655037033601451 
             xmax = 0.719406725062521 
             text = "0.565504 - jh" 
-        intervals [6]:
+        intervals [5]:
             xmin = 0.719406725062521 
-            xmax = 0.9234108864847799 
-            text = "0.719407 - d" 
-        intervals [7]:
-            xmin = 0.9234108864847799 
-            xmax = 1.0005625 
-            text = "0.923411 - k" 
-        intervals [8]:
-            xmin = 1.0005625 
-            xmax = 1.3019137947274408 
-            text = "1.000563 - s" 
-        intervals [9]:
-            xmin = 1.3019137947274408 
-            xmax = 1.4309081758113071 
-            text = "" 
-        intervals [10]:
-            xmin = 1.4309081758113071 
-            xmax = 1.5959014125494828 
-            text = "1.430908 - g" 
-        intervals [11]:
-            xmin = 1.5959014125494828 
-            xmax = 1.7526560496872772 
-            text = "1.595901 - s" 
-        intervals [12]:
-            xmin = 1.7526560496872772 
-            xmax = 1.9817851369613597 
-            text = "1.752656 - w" 
-        intervals [13]:
-            xmin = 1.9817851369613597 
-            xmax = 2.102155406831197 
-            text = "1.981785 - sh" 
-        intervals [14]:
-            xmin = 2.102155406831197 
-            xmax = 2.2540934172190625 
-            text = "2.102155 - w" 
-        intervals [15]:
-            xmin = 2.2540934172190625 
-            xmax = 2.3422205519095556 
-            text = "2.254093 - d" 
-        intervals [16]:
-            xmin = 2.3422205519095556 
-            xmax = 2.483031428336377 
-            text = "" 
-        intervals [17]:
-            xmin = 2.483031428336377 
-            xmax = 2.507793607853334 
-            text = "2.483031 - el" 
-        intervals [18]:
-            xmin = 2.507793607853334 
             xmax = 2.9248125 
             text = "" 
     item [4]:
