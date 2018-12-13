@@ -28,7 +28,15 @@ def main(): # TODO: if the user enters something small like 1 word sentence
     for line in cykMatrix:
         print line
     
-    # if "S" in cykMatrix[n-1][0] then yes, else no
+    outputValue = False
+    for value in cykMatrix[n-1][0]:
+        if value == "S":
+            outputValue = True
+    
+    if outputValue:
+        print("Yes")
+    else:
+        print("No")
 
 def getGrammar():
     grammarDict = []
@@ -54,22 +62,34 @@ def removeTriangle(cykMatrix, n):
 
 def fillMatrix(cykMatrix, n, sentence, grammarDict):
     for i in range(n): # i and j represent the coordinates of the box in the matrix
-        if i == 0: #TODO generalize
+        if i == 0:
             for j in range(n-i):
                 cykMatrix[i][j] = []
                 for rule in grammarDict:
                     if len(rule) == 2: # looking for terminals
                         if sentence[j] == rule[1]:
                             cykMatrix[i][j].append(rule[0])
-        if i > 0:
+        elif i == 1:
             for j in range(n-i):
                 cykMatrix[i][j] = []
                 for rule in grammarDict:
                     if len(rule) == 3: # looking for variables
                         for k in range(len(cykMatrix[i-1][j])): # k and j are used to iterate over each value in the box
                             for l in range(len(cykMatrix[i-1][j+1])):
-                                # print "comparing " + cykMatrix[i-1][j][k] + " to " + rule[1] + " and " + cykMatrix[i-1][j+1][l] + " to " + rule[2]
                                 if cykMatrix[i-1][j][k] == rule[1] and cykMatrix[i-1][j+1][l] == rule[2]:
+                                    cykMatrix[i][j].append(rule[0])
+        elif i > 1:
+            for j in range(n-i):
+                cykMatrix[i][j] = []
+                for rule in grammarDict:
+                    if len(rule) == 3: # looking for variables
+                        for k in range(len(cykMatrix[i-1][j])): # k and j are used to iterate over each value in the box
+                            for l in range(len(cykMatrix[i-2][j+2])):
+                                if cykMatrix[i-1][j][k] == rule[1] and cykMatrix[i-2][j+2][l] == rule[2]:
+                                    cykMatrix[i][j].append(rule[0])
+                        for k in range(len(cykMatrix[i-2][j])):
+                            for l in range(len(cykMatrix[i-1][j+1])):
+                                if cykMatrix[i-2][j][k] == rule[1] and cykMatrix[i-1][j+1][l] == rule[2]:
                                     cykMatrix[i][j].append(rule[0])
     return cykMatrix
 
