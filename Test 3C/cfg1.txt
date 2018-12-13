@@ -13,7 +13,7 @@ NP,she
 NP,me
 NP,TWA,Houston
 NP,Det,Nominal
-Det,through
+Det,the
 Nominal,book
 Nominal,flight
 Nominal,meal
