@@ -32,6 +32,7 @@ def main(): # TODO: if the user enters something small like 1 word sentence
     for value in cykMatrix[n-1][0]:
         if value == "S":
             outputValue = True
+            break
     
     if outputValue:
         print("Yes")
@@ -69,6 +70,17 @@ def fillMatrix(cykMatrix, n, sentence, grammarDict):
                     if len(rule) == 2: # looking for terminals
                         if sentence[j] == rule[1]:
                             cykMatrix[i][j].append(rule[0])
+        elif i > 0:
+            for j in range(n-i):
+                cykMatrix[i][j] = []
+                for rule in grammarDict:
+                    if len(rule) == 3: # looking for variables
+                        for m in range(i): # how many combinations of previous sections are possible (ex. a + ab vs aa + b)
+                            for k in range(len(cykMatrix[i-(m+1)][j])): # k and j are used to iterate over each value in the box
+                                for l in range(len(cykMatrix[i-(i-m)][j+(i-m)])):
+                                    if cykMatrix[i-(m+1)][j][k] == rule[1] and cykMatrix[i-(i-m)][j+(i-m)][l] == rule[2]:
+                                        cykMatrix[i][j].append(rule[0])
+        '''
         elif i == 1:
             for j in range(n-i):
                 cykMatrix[i][j] = []
@@ -78,7 +90,7 @@ def fillMatrix(cykMatrix, n, sentence, grammarDict):
                             for l in range(len(cykMatrix[i-1][j+1])):
                                 if cykMatrix[i-1][j][k] == rule[1] and cykMatrix[i-1][j+1][l] == rule[2]:
                                     cykMatrix[i][j].append(rule[0])
-        elif i > 1:
+        elif i == 2:
             for j in range(n-i):
                 cykMatrix[i][j] = []
                 for rule in grammarDict:
@@ -91,6 +103,25 @@ def fillMatrix(cykMatrix, n, sentence, grammarDict):
                             for l in range(len(cykMatrix[i-1][j+1])):
                                 if cykMatrix[i-2][j][k] == rule[1] and cykMatrix[i-1][j+1][l] == rule[2]:
                                     cykMatrix[i][j].append(rule[0])
+        elif i >= 3:
+            for j in range(n-i):
+                cykMatrix[i][j] = []
+                for rule in grammarDict:
+                    if len(rule) == 3: # looking for variables
+                        for k in range(len(cykMatrix[i-1][j])): # k and j are used to iterate over each value in the box
+                            for l in range(len(cykMatrix[i-3][j+3])):
+                                if cykMatrix[i-1][j][k] == rule[1] and cykMatrix[i-3][j+3][l] == rule[2]:
+                                    cykMatrix[i][j].append(rule[0])
+                        for k in range(len(cykMatrix[i-2][j])):
+                            for l in range(len(cykMatrix[i-2][j+2])):
+                                if cykMatrix[i-2][j][k] == rule[1] and cykMatrix[i-2][j+2][l] == rule[2]:
+                                    cykMatrix[i][j].append(rule[0])
+                        for k in range(len(cykMatrix[i-3][j])):
+                            for l in range(len(cykMatrix[i-1][j+1])):
+                                if cykMatrix[i-3][j][k] == rule[1] and cykMatrix[i-1][j+1][l] == rule[2]:
+                                    cykMatrix[i][j].append(rule[0])
+        '''
+
     return cykMatrix
 
 main()
