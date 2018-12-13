@@ -1,0 +1,7 @@
+S,A,T
+S,A,B
+Q,A,T
+Q,A,B
+T,Q,B
+A,a
+B,b
